@@ -15,14 +15,13 @@ const App: React.FC = () => {
   };
 
   function completeTaskClick(id: number , target: string) {
-    console.log("before : ");
-    console.log(...tasks);
+    
     let copyTasks = tasks.filter((elem)=>{if(elem.id===id){
       elem.status = target;
     } return elem;})
+    
     setTasks(copyTasks);
-    console.log("after : ");
-    console.log(...tasks);
+    
 
   }
 
@@ -48,7 +47,9 @@ const App: React.FC = () => {
             >
               R
             </button>
-            <button>D</button>
+            <button  onClick={() => {
+                completeTaskClick(elem.id, "deleted");
+              }}>D</button>
           </div>
         </div>
       );
@@ -68,6 +69,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="CUD">
+            
             <button
               onClick={() => {
                 completeTaskClick(elem.id, "completed");
@@ -75,8 +77,73 @@ const App: React.FC = () => {
             >
               C
             </button>
-            <button>U</button>
-            <button>D</button>
+
+            <button onClick={() => {
+                completeTaskClick(elem.id, "pending");
+              }}>P
+              </button>
+            
+            <button  onClick={() => {
+                completeTaskClick(elem.id, "deleted");
+              }}>D</button>
+          </div>
+        </div>
+      );
+    })
+ 
+
+
+ 
+    let deleteDiv = tasks.filter((elem) => {
+    if (elem.status === "deleted") {
+      return elem;
+    }
+  }).map((elem, index) => {
+      return (
+        <div className="cardDeleted">
+          <div className="taskHeading">
+            <h3>{elem.todo}</h3>
+          </div>
+
+          <div className="CUD">
+            <button
+              onClick={() => {
+                completeTaskClick(elem.id, "todo");
+              }}
+            >
+              R
+            </button>
+            <button onClick={() => {
+                completeTaskClick(elem.id, "permanentDeleted");
+            }}>D</button>
+          </div>
+        </div>
+      );
+    })
+
+
+    let pendingDiv = tasks.filter((elem) => {
+    if (elem.status === "pending") {
+      return elem;
+    }
+  }).map((elem, index) => {
+      return (
+        <div className="cardPending">
+          <div className="taskHeading">
+            <h3>{elem.todo}</h3>
+          </div>
+
+          <div className="CUD">
+            <button
+              onClick={() => {
+                completeTaskClick(elem.id, "todo");
+              }}
+            >
+              R
+            </button>
+            <button onClick={() => {
+                completeTaskClick(elem.id, "deleted");
+              }}>D</button>
           </div>
         </div>
       );
@@ -86,7 +153,7 @@ const App: React.FC = () => {
 
 
 
-  let stats=[{name:"Total Tasks", static:tasks.length}, {name:"Todo Tasks", static:taskDiv.length}, {name:"Completed Tasks", static:completeDiv.length}, {name:"Pending Tasks", static:0}, {name:"Deleted Tasks", static:0}];
+  let stats=[{name:"Total Tasks", static:tasks.length}, {name:"Todo Tasks", static:taskDiv.length}, {name:"Completed Tasks", static:completeDiv.length}, {name:"Pending Tasks", static:pendingDiv.length}, {name:"Deleted Tasks", static:deleteDiv.length}];
 
   let taskStats = stats.map((elem, index) => {
     return (
@@ -101,6 +168,9 @@ const App: React.FC = () => {
       </div>
     );
   })
+
+
+
 
 
 
@@ -124,6 +194,17 @@ const App: React.FC = () => {
           <h2>Completed</h2>
           {completeDiv}
         </div>
+        
+        <div className="deletedSection">
+          <h2>Deleted</h2>
+          {deleteDiv}
+        </div>
+        
+        <div className="pendingSection">
+          <h2>Pending</h2>
+          {pendingDiv}
+        </div>
+        
       </div>
     </div>
   );
