@@ -10,50 +10,40 @@ const App: React.FC = () => {
 
   const submitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
-    setTasks([...tasks, { id: Date.now(), todo: task, isDone: false }]);
+    setTasks([...tasks, { id: Date.now(), todo: task, status: 'todo' }]);
     setTask("");
   };
 
-  function completeTaskClick(index: number) {
-    console.log("\nIndex : "+ index);
-    console.log("tasks : ");
+  function completeTaskClick(id: number , target: string) {
+    console.log("before : ");
     console.log(...tasks);
-    let copyTasks = [...tasks];
-    copyTasks[index].isDone = true;
+    let copyTasks = tasks.filter((elem)=>{if(elem.id===id){
+      elem.status = target;
+    } return elem;})
     setTasks(copyTasks);
-    console.log("tasks : ");
+    console.log("after : ");
     console.log(...tasks);
+
   }
 
-  function restoreCompleteTask(index: number) {
-    console.log("tasks before : ");
-    console.log(...tasks);
-    let copyTasks = [...tasks];
-    copyTasks[index].isDone = false;
-    console.log("tasks after : ");
-    console.log(...copyTasks);
 
-    setTasks(copyTasks);
-  }
 
   let completeDiv = tasks.filter((elem) => {
-      if (elem.isDone === true) {
-        return elem;
-      }
+       if (elem.status === 'completed') {
+         return elem;
+       }
     })
     .map((elem, index) => {
       return (
-        <div className="card">
+        <div className="cardCompleted">
           <div className="taskHeading">
             <h3>{elem.todo}</h3>
-            <p> : </p>
-            <p>{elem.isDone ? "Complete" : "Not Complete"}</p>
           </div>
 
           <div className="CUD">
             <button
               onClick={() => {
-                restoreCompleteTask(index);
+                completeTaskClick(elem.id, "todo");
               }}
             >
               R
@@ -67,22 +57,20 @@ const App: React.FC = () => {
 
 
   let taskDiv = tasks.filter((elem) => {
-    if (elem.isDone === false) {
+    if (elem.status === "todo") {
       return elem;
     }
   }).map((elem, index) => {
       return (
-        <div className="card">
+        <div className="cardTasks">
           <div className="taskHeading">
             <h3>{elem.todo}</h3>
-            <p> : </p>
-            <p>{elem.isDone ? "Complete" : "Not Complete"}</p>
           </div>
 
           <div className="CUD">
             <button
               onClick={() => {
-                completeTaskClick(index);
+                completeTaskClick(elem.id, "completed");
               }}
             >
               C
@@ -95,6 +83,27 @@ const App: React.FC = () => {
     })
 
 
+
+
+
+  let stats=[{name:"Total Tasks", static:tasks.length}, {name:"Todo Tasks", static:taskDiv.length}, {name:"Completed Tasks", static:completeDiv.length}, {name:"Pending Tasks", static:0}, {name:"Deleted Tasks", static:0}];
+
+  let taskStats = stats.map((elem, index) => {
+    return (
+      <div className="cardStats">
+        <div className="taskHeading">
+          <h3>{elem.name}</h3>
+        </div>
+
+        <div className="CUD">
+        <h3>{elem.static}</h3>
+        </div>
+      </div>
+    );
+  })
+
+
+
   return (
     <div className="main">
       <h1 className="heading">ToDo List</h1>
@@ -103,6 +112,7 @@ const App: React.FC = () => {
       <div className="mainSection">
         <div className="tasksStats">
           <h2>Tasks Statics</h2>
+          {taskStats}
         </div>
 
         <div className="tasksSection">

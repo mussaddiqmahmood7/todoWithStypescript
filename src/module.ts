@@ -1,6 +1,6 @@
 interface Todo{
     id:number,
     todo:string,
-    isDone:boolean
+    status: string | 'todo' | 'completed' | 'pending' | 'deleted';
 }
 export default Todo
