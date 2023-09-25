@@ -10,10 +10,14 @@ const App: React.FC = () => {
   const [search, setSearch] = useState<string>("");
   const [tasks, setTasks] = useState<Todo[]>([]);
   const [mode, setMode]= useState<string>("");
+
+
   const submitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
+    if(task){
     setTasks([...tasks, { id: Date.now(), todo: task, status: 'todo' }]);
     setTask("");
+    }
   };
 
   function completeTaskClick(id: number , target: string) {
@@ -222,8 +226,8 @@ const App: React.FC = () => {
       <h1 className="heading">ToDo List</h1>
        {mode==="search"?<Search find={search} toFind={setSearch}/>:<Input todo={task} setTodo={setTask} submitHandler={submitHandler} />}
       <div className="inputSearchButton">
-        <button onClick={()=>{setMode("input")}}>Add Task</button>
-        <button onClick={()=>{setMode("search")}}>Search Task</button>
+        <button className="inputButton" onClick={()=>{setMode("input")}}>Add Task</button>
+        <button className="searchButton" onClick={()=>{setMode("search")}}>Search Task</button>
       </div>
 
       <div className="mainSection">

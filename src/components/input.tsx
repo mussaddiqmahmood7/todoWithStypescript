@@ -11,7 +11,7 @@ const Input=({todo, setTodo, submitHandler}:tasks)=>{
 
     return<>
         <form className="inputSection" onSubmit={submitHandler}>
-          <input placeholder="Enter Task" value={todo} onChange={(event)=>{setTodo(event.target.value)}}/>
+          <input placeholder="Add Task" value={todo} onChange={(event)=>{setTodo(event.target.value)}}/>
           <button type="submit">Add</button>
         </form>
     </>
