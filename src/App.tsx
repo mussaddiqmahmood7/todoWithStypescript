@@ -168,7 +168,9 @@ const App: React.FC = () => {
       </div>
     );
   })
+   
 
+  console.log(tasks.length);
 
 
 
