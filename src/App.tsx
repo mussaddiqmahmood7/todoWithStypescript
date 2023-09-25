@@ -15,14 +15,38 @@ const App: React.FC = () => {
   };
 
   function completeTaskClick(id: number , target: string) {
-    
-    let copyTasks = tasks.filter((elem)=>{if(elem.id===id){
+    let copyTasks;
+
+   if(target==="permanentDeleted")
+   {
+    copyTasks = [...tasks];
+    for(let i=0; i<tasks.length-1; i++)
+    {
+      
+      if(copyTasks[i].id===id){
+      console.log(i);
+      let index=i;
+        while(index<tasks.length-1){
+        copyTasks[index]=copyTasks[index+1];
+        console.log("in while loop");
+        index++;
+        console.log([...copyTasks])
+      }
+      break;
+    }
+    }
+   copyTasks.pop();
+   }
+   else{
+    console.log("in else")
+     copyTasks = tasks.filter((elem)=>{if(elem.id===id){
       elem.status = target;
     } return elem;})
+   }
+   
+   console.log("copy tasks in mian "+ [...copyTasks])
+   setTasks(copyTasks);
     
-    setTasks(copyTasks);
-    
-
   }
 
 
