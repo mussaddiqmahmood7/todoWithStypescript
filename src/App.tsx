@@ -1,13 +1,15 @@
 import React from "react";
 import { useState } from "react";
 import Input from "./components/input";
+import Search from "./components/search";
 import Todo from "./module";
 import "./App.css";
 
 const App: React.FC = () => {
   const [task, setTask] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
   const [tasks, setTasks] = useState<Todo[]>([]);
-
+  const [mode, setMode]= useState<string>("");
   const submitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
     setTasks([...tasks, { id: Date.now(), todo: task, status: 'todo' }]);
@@ -15,20 +17,44 @@ const App: React.FC = () => {
   };
 
   function completeTaskClick(id: number , target: string) {
-    
-    let copyTasks = tasks.filter((elem)=>{if(elem.id===id){
+    let copyTasks;
+
+   if(target==="permanentDeleted")
+   {
+    copyTasks = [...tasks];
+    for(let i=0; i<tasks.length-1; i++)
+    {
+      
+      if(copyTasks[i].id===id){
+      
+      let index=i;
+        while(index<tasks.length-1){
+        copyTasks[index]=copyTasks[index+1];
+        index++;
+      }
+      break;
+    }
+    }
+   copyTasks.pop();
+   }
+   else{
+     copyTasks = tasks.filter((elem)=>{if(elem.id===id){
       elem.status = target;
     } return elem;})
+   }
+   
+   setTasks(copyTasks);
     
-    setTasks(copyTasks);
-    
-
   }
 
 
 
   let completeDiv = tasks.filter((elem) => {
-       if (elem.status === 'completed') {
+       if(search && elem.status === 'completed')
+       {
+         return elem.todo.toLowerCase().includes(search.toLowerCase())
+       }
+       else if (elem.status === 'completed') {
          return elem;
        }
     })
@@ -57,8 +83,14 @@ const App: React.FC = () => {
 
 
 
+
+
   let taskDiv = tasks.filter((elem) => {
-    if (elem.status === "todo") {
+    if(search && elem.status === 'todo')
+    {
+      return elem.todo.toLowerCase().includes(search.toLowerCase())
+    }
+    else if (elem.todo && elem.status === "todo") {
       return elem;
     }
   }).map((elem, index) => {
@@ -93,9 +125,14 @@ const App: React.FC = () => {
  
 
 
+
  
     let deleteDiv = tasks.filter((elem) => {
-    if (elem.status === "deleted") {
+    if(search && elem.status === 'deleted')
+    {
+      return elem.todo.toLowerCase().includes(search.toLowerCase())
+    }
+    else if (elem.status === "deleted") {
       return elem;
     }
   }).map((elem, index) => {
@@ -123,7 +160,11 @@ const App: React.FC = () => {
 
 
     let pendingDiv = tasks.filter((elem) => {
-    if (elem.status === "pending") {
+      if(search && elem.status === 'pending')
+      {
+        return elem.todo.toLowerCase().includes(search.toLowerCase())
+      }
+      else if (elem.status === "pending") {
       return elem;
     }
   }).map((elem, index) => {
@@ -179,7 +220,11 @@ const App: React.FC = () => {
   return (
     <div className="main">
       <h1 className="heading">ToDo List</h1>
-      <Input todo={task} setTodo={setTask} submitHandler={submitHandler} />
+       {mode==="search"?<Search find={search} toFind={setSearch}/>:<Input todo={task} setTodo={setTask} submitHandler={submitHandler} />}
+      <div className="inputSearchButton">
+        <button onClick={()=>{setMode("input")}}>Add Task</button>
+        <button onClick={()=>{setMode("search")}}>Search Task</button>
+      </div>
 
       <div className="mainSection">
         <div className="tasksStats">

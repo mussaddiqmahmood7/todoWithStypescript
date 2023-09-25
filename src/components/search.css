@@ -16,13 +16,25 @@
     border-radius: 50px;
     box-shadow: inset 0 0 5px black;
     padding:10px 30px;
-    font-size: 1rem;
+    font-size: 1.8rem;
+}
+
+@media(max-width: 800px){
+    .inputSection input{
+        font-size: 0.8rem;
+        height:4vh;
+    }
+    .inputSection button{
+        width:3rem;
+        height:3rem;
+    
+    }
 }
 
 .inputSection button{
     position: absolute;
-    width:60px;
-    height:60px;
+    width:4rem;
+    height:4rem;
     background-color: rgb(107, 129, 239);
     border-radius:50px;
     margin-right: 10px;
