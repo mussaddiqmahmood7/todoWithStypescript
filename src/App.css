@@ -223,6 +223,10 @@ body{
   position:relative;
   border-radius:10px;
 }
+.cardTasks:hover{
+  background-color: rgb(238, 113, 113);
+  box-shadow: 2px 2px 5px black;
+}
 
 .cardDeleted{
   height:50px;
@@ -236,6 +240,11 @@ body{
   margin:10px;
   position:relative;
   border-radius:10px;
+}
+
+.cardDeleted:hover{
+  background-color: rgb(77, 73, 73);
+  box-shadow: 2px 2px 5px black;
 }
 
 
@@ -253,6 +262,11 @@ body{
   border-radius:10px;
 }
 
+.cardStats:hover{
+  background-color: rgb(85, 211, 165);
+  box-shadow: 2px 2px 5px black;
+}
+
 .cardPending{
   height:50px;
   width:88%;
@@ -267,6 +281,11 @@ body{
   border-radius:10px;
 }
 
+.cardPending:hover{
+  background-color: rgb(221, 142, 237);
+  box-shadow: 2px 2px 5px black;
+}
+
 .cardCompleted{
   height:50px;
   width:88%;
@@ -279,6 +298,11 @@ body{
   margin:10px;
   position:relative;
   border-radius:10px;
+}
+
+.cardCompleted:hover{
+  background-color: rgb(115, 223, 69);
+  box-shadow: 2px 2px 5px black;
 }
 
 .taskHeading{
@@ -303,6 +327,7 @@ body{
   margin:5px;
   border-radius:10px;
   border:none;
+  font-weight: bold;
 }
 
 .CUD button:hover{
