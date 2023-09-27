@@ -1,23 +1,43 @@
-import React from 'react';
-import './search.css';
-
-interface search{
-    find:string;
-    toFind:React.Dispatch<React.SetStateAction<string>>
+import React from "react";
+import "./search.css";
+interface Todo {
+  id: number;
+  todo: string;
+  status: string | "todo" | "completed" | "pending" | "deleted";
+  update: boolean;
 }
 
-const Search=({find, toFind}:search )=>{
- 
-    function searchSubmit(event:React.FormEvent){
-     event.preventDefault();
-     toFind(find);
+interface search {
+  find: string;
+  toFind: React.Dispatch<React.SetStateAction<string>>;
+  all: Todo[];
+}
+
+const Search = ({ find, toFind, all }: search) => {
+  all.map((e) => {
+    if (e.update == true) {
+      e.update = false;
     }
-    return<>
-        <form className="inputSection" onSubmit={searchSubmit}>
-          <input placeholder="Search Task" value={find} onChange={(event)=>{toFind(event.target.value)}}/>
-          <button type="submit">Search</button>
-        </form>
-    </>
-}
+  });
 
-export default Search
+  function searchSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    toFind(find);
+  }
+  return (
+    <>
+      <form className="inputSection" onSubmit={searchSubmit}>
+        <input
+          placeholder="Search Task"
+          value={find}
+          onChange={(event) => {
+            toFind(event.target.value);
+          }}
+        />
+        <button type="submit">Search</button>
+      </form>
+    </>
+  );
+};
+
+export default Search;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Input from "./components/input";
 import Search from "./components/search";
@@ -10,17 +10,33 @@ const App = () => {
   const [search, setSearch] = useState<string>("");
   const [tasks, setTasks] = useState<Todo[]>([]);
   const [mode, setMode] = useState<string>("");
+  const [update, setUpdate] = useState<boolean>(false);
+  const [edit, setEdit] = useState<string>("");
+
+  useEffect(() => {
+    const data = localStorage.getItem("task");
+    const localData = data ? JSON.parse(data) : [];
+    setTasks(localData);
+  }, []);
 
   const submitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
     if (task) {
-      setTasks([...tasks, { id: Date.now(), todo: task, status: "todo" }]);
+      const updatedTask = [
+        ...tasks,
+        { id: Date.now(), todo: task, status: "todo", update: false },
+      ];
+      setTasks(updatedTask);
       setTask("");
+      localStorage.setItem("task", JSON.stringify(updatedTask));
     }
   };
 
   function completeTaskClick(id: number, target: string) {
     let copyTasks;
+    tasks.map((e) => {
+      if (e.update == true) e.update = false;
+    });
 
     if (target === "permanentDeleted") {
       copyTasks = [...tasks];
@@ -43,7 +59,8 @@ const App = () => {
         return elem;
       });
     }
-
+    localStorage.removeItem("task");
+    localStorage.setItem("task", JSON.stringify(copyTasks));
     setTasks(copyTasks);
   }
 
@@ -82,6 +99,29 @@ const App = () => {
       );
     });
 
+  function updateTodo(elem: Todo) {
+    let copyTasks = tasks.map((e) => {
+      if (e.id == elem.id) {
+        if (elem.update == true) {
+          elem.todo = edit;
+        } else {
+          tasks.map((e) => {
+            if (e.update == true) {
+              console.log(e + " was true but i close it");
+              e.update = false;
+            }
+          });
+          setEdit(elem.todo);
+        }
+        e.update = !e.update;
+      }
+      return e;
+    });
+    localStorage.removeItem("task");
+    localStorage.setItem("task", JSON.stringify(copyTasks));
+    setTasks(copyTasks);
+  }
+
   let taskDiv = tasks
     .filter((elem) => {
       if (search && elem.status === "todo") {
@@ -91,10 +131,20 @@ const App = () => {
       }
     })
     .map((elem, index) => {
+      let element;
       return (
         <div className="cardTasks">
           <div className="taskHeading">
-            <h3>{elem.todo}</h3>
+            {elem.update == false ? (
+              <h3>{elem.todo}</h3>
+            ) : (
+              <div className="updateInput">
+                <input
+                  value={edit}
+                  onChange={(event) => setEdit(event.target.value)}
+                />
+              </div>
+            )}
           </div>
 
           <div className="CUD">
@@ -104,6 +154,14 @@ const App = () => {
               }}
             >
               C
+            </button>
+
+            <button
+              onClick={() => {
+                updateTodo(elem);
+              }}
+            >
+              U
             </button>
 
             <button
@@ -218,19 +276,18 @@ const App = () => {
     );
   });
 
-  console.log(tasks.length);
-
   return (
     <div className="main">
       <h1 className="heading">ToDo List</h1>
       {mode === "search" ? (
-        <Search find={search} toFind={setSearch} />
+        <Search find={search} toFind={setSearch} all={tasks} />
       ) : (
         <Input
           todo={task}
           setTodo={setTask}
           submitHandler={submitHandler}
           setsearch={setSearch}
+          all={tasks}
         />
       )}
       <div className="inputSearchButton">
