@@ -18,11 +18,7 @@ interface tasks {
 
 const Input = ({ todo, setTodo, submitHandler, setsearch, all }: tasks) => {
   setsearch("");
-  all.map((e) => {
-    if (e.update == true) {
-      e.update = false;
-    }
-  });
+
   return (
     <>
       <form className="inputSection" onSubmit={submitHandler}>
@@ -30,6 +26,11 @@ const Input = ({ todo, setTodo, submitHandler, setsearch, all }: tasks) => {
           placeholder="Add Task"
           value={todo}
           onChange={(event) => {
+            all.map((e) => {
+              if (e.update == true) {
+                e.update = false;
+              }
+            });
             setTodo(event.target.value);
           }}
         />

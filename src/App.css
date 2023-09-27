@@ -305,6 +305,23 @@ body{
   border:none;
 }
 
+.CUD button:hover{
+  width: 15px;
+  height: 15px;
+  margin:5px;
+  border-radius:10px;
+  border:none;
+  background-color: rgb(41, 41, 245);
+  color:white;
+  scale: 1.2;
+  font-weight: bold;
+}
+
+
+
+
+
+
 .updateInput input{
   width:75%;
   height: 90%;

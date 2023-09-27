@@ -10,8 +10,8 @@ const App = () => {
   const [search, setSearch] = useState<string>("");
   const [tasks, setTasks] = useState<Todo[]>([]);
   const [mode, setMode] = useState<string>("");
-  const [update, setUpdate] = useState<boolean>(false);
   const [edit, setEdit] = useState<string>("");
+  let check = 0;
 
   useEffect(() => {
     const data = localStorage.getItem("task");
@@ -100,26 +100,31 @@ const App = () => {
     });
 
   function updateTodo(elem: Todo) {
-    let copyTasks = tasks.map((e) => {
+    check = 1;
+    var copyUpdateTasks;
+    copyUpdateTasks = tasks.map((e) => {
       if (e.id == elem.id) {
         if (elem.update == true) {
           elem.todo = edit;
         } else {
-          tasks.map((e) => {
-            if (e.update == true) {
-              console.log(e + " was true but i close it");
-              e.update = false;
+          tasks.map((i) => {
+            if (i.update == true) {
+              i.update = false;
             }
           });
           setEdit(elem.todo);
         }
+
         e.update = !e.update;
       }
+      console.log(e.todo + " : " + e.update);
       return e;
     });
+
+    console.log([...copyUpdateTasks]);
     localStorage.removeItem("task");
-    localStorage.setItem("task", JSON.stringify(copyTasks));
-    setTasks(copyTasks);
+    localStorage.setItem("task", JSON.stringify(copyUpdateTasks));
+    setTasks(copyUpdateTasks);
   }
 
   let taskDiv = tasks
@@ -131,7 +136,6 @@ const App = () => {
       }
     })
     .map((elem, index) => {
-      let element;
       return (
         <div className="cardTasks">
           <div className="taskHeading">
@@ -294,6 +298,11 @@ const App = () => {
         <button
           className="inputButton"
           onClick={() => {
+            tasks.map((e) => {
+              if (e.update == true) {
+                e.update = false;
+              }
+            });
             setMode("input");
           }}
         >
@@ -302,6 +311,11 @@ const App = () => {
         <button
           className="searchButton"
           onClick={() => {
+            tasks.map((e) => {
+              if (e.update == true) {
+                e.update = false;
+              }
+            });
             setMode("search");
           }}
         >

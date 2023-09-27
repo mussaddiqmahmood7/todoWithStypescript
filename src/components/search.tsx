@@ -14,12 +14,6 @@ interface search {
 }
 
 const Search = ({ find, toFind, all }: search) => {
-  all.map((e) => {
-    if (e.update == true) {
-      e.update = false;
-    }
-  });
-
   function searchSubmit(event: React.FormEvent) {
     event.preventDefault();
     toFind(find);
@@ -31,6 +25,11 @@ const Search = ({ find, toFind, all }: search) => {
           placeholder="Search Task"
           value={find}
           onChange={(event) => {
+            all.map((e) => {
+              if (e.update == true) {
+                e.update = false;
+              }
+            });
             toFind(event.target.value);
           }}
         />
